@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
+    fetch(`/api/load/${id}`)
+      .then(res => res.text())
+      .then(html => document.write(html));
+  </script>
+</body>
+</html>
