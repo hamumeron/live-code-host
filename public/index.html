@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Live Editor</title>
+  <script src="https://unpkg.com/codemirror@5/lib/codemirror.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/codemirror@5/lib/codemirror.css">
+  <style>
+    body { display: flex; flex-direction: column; height: 100vh; margin: 0; }
+    #editor { flex: 1; }
+    iframe { flex: 1; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <textarea id="editor"></textarea>
+  <iframe id="preview"></iframe>
+  <button onclick="saveCode()">公開する</button>
+
+  <script>
+    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      lineNumbers: true,
+      mode: "htmlmixed"
+    });
+
+    editor.on("change", () => {
+      document.getElementById("preview").srcdoc = editor.getValue();
+    });
+
+    async function saveCode() {
+      const code = editor.getValue();
+      const id = Math.random().toString(36).substring(2, 8);
+      await fetch(`/api/save/${id}`, {
+        method: "POST",
+        body: code
+      });
+      alert(`公開URL: /view.html?id=${id}`);
+    }
+  </script>
+</body>
+</html>
